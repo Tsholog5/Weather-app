@@ -42,6 +42,11 @@ const Weather = () => {
       {weather && (
         <div className="weather-info">
           <h2>{weather.name}</h2>
+          <img
+            src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
+            alt={weather.weather[0].description}
+            className="weather-icon"
+          />
           <p>{weather.weather[0].description}</p>
           <p>Temperature: {weather.main.temp} °C</p>
           <p>Humidity: {weather.main.humidity}%</p>
