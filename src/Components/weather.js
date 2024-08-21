@@ -148,6 +148,16 @@ const Weather = () => {
     }
   }, []);
 
+  const openInMaps = () => {
+    if (coords.lat && coords.lon) {
+      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${coords.lat},${coords.lon}`;
+      window.open(googleMapsUrl, '_blank');
+    } else if (weather && weather.coord) {
+      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${weather.coord.lat},${weather.coord.lon}`;
+      window.open(googleMapsUrl, '_blank');
+    }
+  };
+
   return (
     <div className="weather-container">
       <h1>Weather App</h1>
@@ -183,6 +193,7 @@ const Weather = () => {
           <p>Temperature: {weather.main.temp} °C</p>
           <p>Humidity: {weather.main.humidity}%</p>
           <p>Wind Speed: {weather.wind.speed} m/s</p>
+          <button onClick={openInMaps} className="gps-button">Open in Maps</button>
         </div>
       )}
 
@@ -206,25 +217,27 @@ const Weather = () => {
         </div>
       )}
 
-      {forecast.length > 0 && (
-        <div className="forecast">
-          <h2>5-Day Forecast</h2>
-          <div className="forecast-list">
-            {forecast.map((day, index) => (
-              <div key={index} className="forecast-item">
-                <p>{new Date(day.date).toLocaleDateString()}</p>
-                <img
-                  src={`http://openweathermap.org/img/wn/${day.icon}.png`}
-                  alt={day.description}
-                  className="forecast-icon"
-                />
-                <p>{day.description}</p>
-                <p>{day.temp} °C</p>
-              </div>
-            ))}
-          </div>
+{forecast.length > 0 && (
+  <div className="forecast">
+    <h2>5-Day Forecast</h2>
+    <div className="forecast-list">
+      {forecast.map((day, index) => (
+        <div key={index} className="forecast-item">
+          <p><strong>{new Date(day.date).toLocaleDateString('en-US', { weekday: 'long' })}</strong></p>
+          <p>{new Date(day.date).toLocaleDateString()}</p>
+          <img
+            src={`http://openweathermap.org/img/wn/${day.icon}.png`}
+            alt={day.description}
+            className="forecast-icon"
+          />
+          <p>{day.description}</p>
+          <p>{day.temp} °C</p>
         </div>
-      )}
+      ))}
+    </div>
+  </div>
+)}
+
 
       {nearbyCities.length > 0 && (
         <div className="nearby-cities">
@@ -240,6 +253,10 @@ const Weather = () => {
                 />
                 <p>{city.weather[0].description}</p>
                 <p>Temperature: {city.main.temp} °C</p>
+                <button onClick={() => {
+                  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${city.coord.lat},${city.coord.lon}`;
+                  window.open(mapsUrl, '_blank');
+                }} className="gps-button">Open in Maps</button>
               </div>
             ))}
           </div>
